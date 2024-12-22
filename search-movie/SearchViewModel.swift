@@ -85,6 +85,19 @@ final class SearchViewModel: ObservableObject {
         }
     }
     
+    func validatedURL(from string: String) -> URL? {
+        guard !string.isEmpty, string != "N/A" else {
+            return nil
+        }
+        guard let url = URL(string: string) else {
+            return nil
+        }
+        guard let scheme = url.scheme?.lowercased(), ["http", "https"].contains(scheme) else {
+            return nil
+        }
+        return url
+    }
+    
     func searchMovie()  async {
         observeNetwork()
         guard !search.isEmpty, !isLoading, !isLastPage, isConnected else { return }

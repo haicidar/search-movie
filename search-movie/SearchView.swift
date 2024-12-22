@@ -24,17 +24,27 @@ struct SearchView: View {
                 } else {
                     List(viewModel.movies, id: \.id) { movie in
                         HStack {
-                            AsyncImage(url: URL(string: movie.poster ?? "")) { image in
-                                image
+                            if let validatedUrl = viewModel.validatedURL(from: movie.poster ?? "") {
+                                AsyncImage(url: validatedUrl) { image in
+                                    image
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .clipShape(.rect)
+                                } placeholder: {
+                                    Rectangle()
+                                        .foregroundColor(.gray)
+                                }
+                                .frame(width: 90, height: 120)
+                                .shimmer(when: .constant(viewModel.isLoading))
+                            } else {
+                                Image("EmptyPoster")
                                     .resizable()
                                     .aspectRatio(contentMode: .fit)
-                                    .clipShape(.rect)
-                            } placeholder: {
-                                Rectangle()
                                     .foregroundColor(.gray)
+                                    .opacity(0.5)
+                                    .frame(width: 90, height: 120)
+                                    .shimmer(when: .constant(viewModel.isLoading))
                             }
-                            .frame(width: 60, height: 80)
-                            .shimmer(when: .constant(viewModel.isLoading))
                             
                             VStack(alignment: .leading) {
                                 Text(movie.title?.capitalized ?? "")
