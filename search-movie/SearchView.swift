@@ -15,7 +15,7 @@ struct SearchView: View {
             VStack {
                 if viewModel.movies == nil {
                     Text("Discover your next favorite movie!")
-                        .font(.title2)
+                        .font(.largeTitle)
                         .fontWeight(.bold)
                         .foregroundColor(.primary)
                         .frame(maxWidth: .infinity, alignment: .center)
