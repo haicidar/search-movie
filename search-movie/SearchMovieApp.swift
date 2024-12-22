@@ -8,7 +8,7 @@
 import SwiftUI
 
 @main
-struct SearcMovieApp: App {
+struct SearchMovieApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
