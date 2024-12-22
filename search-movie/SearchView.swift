@@ -73,6 +73,12 @@ struct SearchView: View {
                     .padding(.vertical)
                     .transition(.slide)
             }
+            .alert(isPresented: $viewModel.isShowingAlert) {
+                return Alert(
+                    title: Text("Error"),
+                    message: Text(viewModel.error?.errorDescription ?? "")
+                )
+            }
             .animation(.easeInOut(duration: 0.3), value: viewModel.movies.isEmpty)
         }
     }

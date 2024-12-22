@@ -14,7 +14,8 @@ final class SearchViewModel: ObservableObject {
     @Published var search: String = ""
     @Published var isLoading: Bool = false
     @Published var descriptionTitle: String = ""
-    @Published var errorMessage: String?
+    @Published var error: CustomError?
+    @Published var isShowingAlert: Bool = false
     private let defaultDescriptionTitle: String = "Discover your next favorite movie!"
     private var page: Int = 1
     private var isLastPage: Bool = false
@@ -65,10 +66,12 @@ final class SearchViewModel: ObservableObject {
                 self.movies = []
                 self.descriptionTitle = "Empty popcorn bucket 🍿 Try a new search!"
             default:
-                self.errorMessage = error.localizedDescription
+                self.error = error
+                self.isShowingAlert = true
             }
         } catch {
-            print(error.localizedDescription, "default error")
+            self.error = .custom(error: error)
+            self.isShowingAlert = true
         }
         isLoading = false
     }

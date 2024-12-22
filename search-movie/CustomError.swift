@@ -27,7 +27,7 @@ enum CustomError: LocalizedError {
             return "Invalid data"
             
         case .invalidAPIKey:
-            return "Invalid API Key"
+            return "API Key not found"
             
         case .notFound:
             return "Not Found"
