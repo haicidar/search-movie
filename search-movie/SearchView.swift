@@ -14,12 +14,13 @@ struct SearchView: View {
         NavigationStack {
             VStack {
                 if viewModel.movies.isEmpty {
-                    Text("Discover your next favorite movie!")
+                    Text(viewModel.descriptionTitle)
                         .font(.largeTitle)
                         .fontWeight(.bold)
                         .foregroundColor(.primary)
                         .frame(maxWidth: .infinity, alignment: .center)
                         .transition(.push(from: .top))
+                        .padding(.horizontal)
                 } else {
                     List(viewModel.movies, id: \.id) { movie in
                         HStack {

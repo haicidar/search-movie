@@ -13,12 +13,16 @@ final class SearchViewModel: ObservableObject {
     @Published var movies: [Movie] = []
     @Published var search: String = ""
     @Published var isLoading: Bool = false
+    @Published var descriptionTitle: String = ""
+    @Published var errorMessage: String?
+    private let defaultDescriptionTitle: String = "Discover your next favorite movie!"
     private var page: Int = 1
     private var isLastPage: Bool = false
     
     private var cancellables = Set<AnyCancellable>()
 
     init() {
+        descriptionTitle = defaultDescriptionTitle
         $search
             .debounce(for: .seconds(0.5), scheduler: RunLoop.main)
             .removeDuplicates()
@@ -55,8 +59,16 @@ final class SearchViewModel: ObservableObject {
             } else {
             isLastPage = true
             }
-        } catch let error {
-            print(error.localizedDescription, "got an error")
+        } catch let error as CustomError {
+            switch error {
+            case .notFound:
+                self.movies = []
+                self.descriptionTitle = "Empty popcorn bucket 🍿 Try a new search!"
+            default:
+                self.errorMessage = error.localizedDescription
+            }
+        } catch {
+            print(error.localizedDescription, "default error")
         }
         isLoading = false
     }
