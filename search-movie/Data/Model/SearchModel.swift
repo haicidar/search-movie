@@ -39,4 +39,5 @@ enum TypeEnum: String, Codable {
     case movie
     case series
     case episode
+    case game
 }
