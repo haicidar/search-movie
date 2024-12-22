@@ -32,6 +32,8 @@ final class SearchViewModel: ObservableObject {
         
         descriptionTitle = defaultDescriptionTitle
         
+        restoreSearchHistory()
+        
         $search
             .debounce(for: .seconds(0.5), scheduler: RunLoop.main)
             .removeDuplicates()
@@ -56,6 +58,33 @@ final class SearchViewModel: ObservableObject {
         }
     }
     
+    private func storeSearchHistory() {
+        UserDefaultsManager.shared.set(value: search, forKey: .searchKeyword)
+        
+        do {
+            let encoder = PropertyListEncoder()
+            let data = try encoder.encode(movies)
+            UserDefaultsManager.shared.set(value: data, forKey: .movies)
+        } catch let error {
+            self.error = .custom(error: error)
+            self.isShowingAlert = true
+        }
+    }
+    
+    private func restoreSearchHistory() {
+        guard let search = UserDefaultsManager.shared.get(forKey: .searchKeyword) as String? else { return }
+        self.search = search
+        guard let storedMovies = UserDefaultsManager.shared.get(forKey: .movies) as Data? else { return }
+        do {
+            let decoder = PropertyListDecoder()
+            let movies = try decoder.decode([Movie].self, from: storedMovies)
+            self.movies = movies
+        } catch let error {
+            self.error = .custom(error: error)
+            self.isShowingAlert = true
+        }
+    }
+    
     func searchMovie()  async {
         observeNetwork()
         guard !search.isEmpty, !isLoading, !isLastPage, isConnected else { return }
@@ -66,14 +95,20 @@ final class SearchViewModel: ObservableObject {
             guard let movies = searchResult.search else { throw CustomError.notFound }
             if page == 1 {
                 self.movies = movies
+                storeSearchHistory()
             } else {
                 self.movies.append(contentsOf: movies)
             }
-            if movies.count < Int(searchResult.totalResults ?? "0") ?? 0 {
+            
+            let totalMoviesFetched = self.movies.count
+            let totalMoviesAvailable = Int(searchResult.totalResults ?? "0") ?? 0
+
+            if totalMoviesFetched < totalMoviesAvailable {
                 self.page += 1
             } else {
-            isLastPage = true
+                isLastPage = true
             }
+
         } catch let error as CustomError {
             switch error {
             case .notFound:
