@@ -19,6 +19,7 @@ struct SearchView: View {
                         .fontWeight(.bold)
                         .foregroundColor(.primary)
                         .frame(maxWidth: .infinity, alignment: .center)
+                        .transition(.push(from: .top))
                 } else {
                     List(viewModel.movies, id: \.id) { movie in
                         HStack {
@@ -55,6 +56,7 @@ struct SearchView: View {
                     .listRowInsets(EdgeInsets())
                     .background(Color.white)
                     .navigationTitle("Search Movie")
+                    .transition(.opacity)
                 }
                 
                 TextField("Search Movie", text: $viewModel.search)
@@ -68,7 +70,9 @@ struct SearchView: View {
                     .padding(.horizontal)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical)
+                    .transition(.slide)
             }
+            .animation(.easeInOut(duration: 0.3), value: viewModel.movies.isEmpty)
         }
     }
 }
