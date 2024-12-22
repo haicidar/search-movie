@@ -13,6 +13,7 @@ final class SearchViewModel: ObservableObject {
     @Published var movies: [Movie]?
     @Published var search: String = ""
     @Published var page: Int = 1
+    @Published var isLoading: Bool = false
     
     private var cancellables = Set<AnyCancellable>()
 
@@ -29,11 +30,14 @@ final class SearchViewModel: ObservableObject {
     }
     
     func searchMovie()  async {
+        guard !search.isEmpty, !isLoading else { return }
+        isLoading = true
         let params: [String: String] = ["s": search, "page": String(page)]
         do {
             self.movies = try await RemoteDataSource.getSearchData(with: params).search
         } catch let error {
             print(error.localizedDescription, "got an error")
         }
+        isLoading = false
     }
 }

@@ -32,12 +32,15 @@ struct SearchView: View {
                                     .foregroundColor(.gray)
                             }
                             .frame(width: 60, height: 80)
+                            .shimmer(when: .constant(viewModel.isLoading))
                             
                             VStack(alignment: .leading) {
                                 Text(movie.title?.capitalized ?? "")
                                     .font(.headline)
+                                    .shimmer(when: .constant(viewModel.isLoading))
                                 Text("\(movie.type?.rawValue.capitalized ?? "") • \(movie.year ?? "")")
                                     .font(.subheadline)
+                                    .shimmer(when: .constant(viewModel.isLoading))
                             }
                         }
                     }
