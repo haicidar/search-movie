@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SearchView: View {
-    @ObservedObject var viewModel = SearchViewModel()
+    @ObservedObject var viewModel: SearchViewModel
     
     var body: some View {
         NavigationStack {
@@ -85,5 +85,5 @@ struct SearchView: View {
 }
 
 #Preview {
-    SearchView()
+    SearchView(viewModel: SearchViewModel(networkMonitor: NetworkMonitor.shared))
 }

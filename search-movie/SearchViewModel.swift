@@ -16,14 +16,22 @@ final class SearchViewModel: ObservableObject {
     @Published var descriptionTitle: String = ""
     @Published var error: CustomError?
     @Published var isShowingAlert: Bool = false
+    @Published var isConnected: Bool = false
+    
+    private var networkMonitor: NetworkMonitoring
     private let defaultDescriptionTitle: String = "Discover your next favorite movie!"
     private var page: Int = 1
     private var isLastPage: Bool = false
     
     private var cancellables = Set<AnyCancellable>()
 
-    init() {
+    init(networkMonitor: NetworkMonitoring) {
+        self.networkMonitor = networkMonitor
+        
+        observeNetwork()
+        
         descriptionTitle = defaultDescriptionTitle
+        
         $search
             .debounce(for: .seconds(0.5), scheduler: RunLoop.main)
             .removeDuplicates()
@@ -35,7 +43,12 @@ final class SearchViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
-    func resetSearch() {
+    private func observeNetwork() {
+        networkMonitor.startMonitoring()
+        isConnected = networkMonitor.isConnected
+    }
+    
+    private func resetSearch() {
         self.page = 1
         self.isLastPage = false
         Task {
@@ -44,7 +57,8 @@ final class SearchViewModel: ObservableObject {
     }
     
     func searchMovie()  async {
-        guard !search.isEmpty, !isLoading, !isLastPage else { return }
+        observeNetwork()
+        guard !search.isEmpty, !isLoading, !isLastPage, isConnected else { return }
         isLoading = true
         let params: [String: String] = ["s": search, "page": String(page)]
         do {
