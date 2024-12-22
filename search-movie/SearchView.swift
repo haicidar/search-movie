@@ -63,6 +63,9 @@ struct SearchView: View {
                             }
                         }
                     }
+                    .refreshable {
+                        viewModel.resetSearch()
+                    }
                     .listStyle(.plain)
                     .listRowInsets(EdgeInsets())
                     .background(Color.white)
@@ -71,6 +74,9 @@ struct SearchView: View {
                 }
                 
                 TextField("Search Movie", text: $viewModel.search)
+                    .onSubmit {
+                        viewModel.resetSearch()
+                    }
                     .padding()
                     .background(Color.gray.opacity(0.1))
                     .cornerRadius(15)

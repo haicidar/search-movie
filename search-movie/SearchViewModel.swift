@@ -50,14 +50,6 @@ final class SearchViewModel: ObservableObject {
         isConnected = networkMonitor.isConnected
     }
     
-    private func resetSearch() {
-        self.page = 1
-        self.isLastPage = false
-        Task {
-            await searchMovie()
-        }
-    }
-    
     private func storeSearchHistory() {
         UserDefaultsManager.shared.set(value: search, forKey: .searchKeyword)
         
@@ -96,6 +88,14 @@ final class SearchViewModel: ObservableObject {
             return nil
         }
         return url
+    }
+    
+    func resetSearch() {
+        self.page = 1
+        self.isLastPage = false
+        Task {
+            await searchMovie()
+        }
     }
     
     func searchMovie()  async {
