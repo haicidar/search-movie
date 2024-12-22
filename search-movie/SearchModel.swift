@@ -20,15 +20,16 @@ struct Search: Codable {
 }
 
 // MARK: - Movie
-struct Movie: Codable {
-    let title, year, imdbID: String?
+struct Movie: Codable, Identifiable, Equatable {
+    var id: String
+    let title, year: String?
     let type: TypeEnum?
     let poster: String?
 
     enum CodingKeys: String, CodingKey {
+        case id = "imdbID"
         case title = "Title"
         case year = "Year"
-        case imdbID
         case type = "Type"
         case poster = "Poster"
     }

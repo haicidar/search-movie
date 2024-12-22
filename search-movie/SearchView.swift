@@ -13,14 +13,14 @@ struct SearchView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                if viewModel.movies == nil {
+                if viewModel.movies.isEmpty {
                     Text("Discover your next favorite movie!")
                         .font(.largeTitle)
                         .fontWeight(.bold)
                         .foregroundColor(.primary)
                         .frame(maxWidth: .infinity, alignment: .center)
                 } else {
-                    List(viewModel.movies ?? [], id: \.imdbID) { movie in
+                    List(viewModel.movies, id: \.id) { movie in
                         HStack {
                             AsyncImage(url: URL(string: movie.poster ?? "")) { image in
                                 image
@@ -41,6 +41,13 @@ struct SearchView: View {
                                 Text("\(movie.type?.rawValue.capitalized ?? "") • \(movie.year ?? "")")
                                     .font(.subheadline)
                                     .shimmer(when: .constant(viewModel.isLoading))
+                            }
+                        }
+                        .onAppear {
+                            if movie == viewModel.movies.last {
+                                Task {
+                                    await viewModel.searchMovie()
+                                }
                             }
                         }
                     }

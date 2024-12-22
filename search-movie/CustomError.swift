@@ -12,6 +12,7 @@ enum CustomError: LocalizedError {
     case invalidResponse
     case invalidData
     case invalidAPIKey
+    case notFound
     case custom(error: Error)
     
     var errorDescription: String? {
@@ -27,6 +28,9 @@ enum CustomError: LocalizedError {
             
         case .invalidAPIKey:
             return "Invalid API Key"
+            
+        case .notFound:
+            return "Not Found"
             
         case .custom(let error):
             return error.localizedDescription
