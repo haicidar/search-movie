@@ -16,6 +16,8 @@
     ```bash
     API_KEY = your_api_key
     ```
+
+---
     
 ## Tech Reasoning
 
@@ -24,6 +26,12 @@ The **Model-View-ViewModel (MVVM)** architecture is implemented to maintain a cl
 
 ### UserDefaults
 **UserDefaults** is used as a data cache in this project due to the nature of the data being stored—small and lightweight (e.g., 10 search queries). Unlike **NSCache**, **UserDefaults** provides reliable persistence as it is not purged under memory pressure. Additionally, its simplicity makes it an ideal choice for this use case.
+
+### Framework
+I use SwiftLint to maintain code readability and ensure a clean codebase. No additional frameworks were added to minimize dependencies on third-party libraries, keeping the app lightweight and easier to maintain.
+
+### UI Design
+The search text field is positioned at the bottom of the screen, inspired by Safari's design, making it more ergonomic and easier for thumbs to reach. When the app starts or no data is available, the text field moves to the center of the screen to draw the user's attention and emphasize its purpose.
 
 ---
 
@@ -38,6 +46,9 @@ Although **UserDefaults** works well for small data, it lacks memory management 
 ---
 
 ## Future Improvements
+
+### Remote Data Source
+Refactor the remote data source service to be more generic and adaptable, enabling support for multiple endpoints and model targets.
 
 ### Layering
 Refactor the codebase to introduce proper separation between low-level and high-level layers. Ensure dependencies between these layers are loosely coupled to create a clean, maintainable, reusable, and testable architecture.
